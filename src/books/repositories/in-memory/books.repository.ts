@@ -1,9 +1,7 @@
-import { Injectable } from '@nestjs/common';
 import { CreateBookDto } from '../../dto/create-book.dto';
 import { BookEntity } from '../../entities/book.entity';
 import { IBooksRepository } from '../interfaces/books-repository.interface';
 
-@Injectable()
 export class BooksRepository implements IBooksRepository {
   books: BookEntity[] = [];
 

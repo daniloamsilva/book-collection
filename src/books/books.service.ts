@@ -1,11 +1,13 @@
-import { Injectable, ImATeapotException } from '@nestjs/common';
+import { Injectable, Inject, ImATeapotException } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { IBooksRepository } from './repositories/interfaces/books-repository.interface';
 
 @Injectable()
 export class BooksService {
-  constructor(private readonly booksRepository: IBooksRepository) {}
+  constructor(
+    @Inject('IBooksRepository') private booksRepository: IBooksRepository,
+  ) {}
 
   async create({ title, pages }: CreateBookDto) {
     if (!pages) throw new ImATeapotException('Zero páginas.');
