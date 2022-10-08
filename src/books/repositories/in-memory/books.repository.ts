@@ -11,4 +11,8 @@ export class BooksRepository implements IBooksRepository {
     this.books.push(book);
     return book;
   }
+
+  async findAll(): Promise<BookEntity[]> {
+    return this.books;
+  }
 }

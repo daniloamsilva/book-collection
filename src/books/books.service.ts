@@ -15,4 +15,9 @@ export class BooksService {
     const book = await this.booksRepository.create({ title, pages });
     return book;
   }
+
+  async findAll() {
+    const books = await this.booksRepository.findAll();
+    return books;
+  }
 }

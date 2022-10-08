@@ -35,6 +35,10 @@ describe('BooksController', () => {
       .expect(201);
   });
 
+  it('GET /books', () => {
+    return request(app.getHttpServer()).get('/books').expect(200);
+  });
+
   afterAll(async () => {
     await app.close();
   });

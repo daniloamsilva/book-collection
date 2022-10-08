@@ -30,4 +30,26 @@ describe('BooksService', () => {
       ).rejects.toEqual(new ImATeapotException('Zero páginas.'));
     });
   });
+
+  describe('List all books', () => {
+    it('should be able to list all books', async () => {
+      const book1 = await booksService.create({
+        title: 'Book 1',
+        pages: 10,
+      });
+      const book2 = await booksService.create({
+        title: 'Book 2',
+        pages: 20,
+      });
+      const book3 = await booksService.create({
+        title: 'Book 3',
+        pages: 30,
+      });
+
+      const books = await booksService.findAll();
+      console.log(books);
+
+      expect(books).toStrictEqual([book1, book2, book3]);
+    });
+  });
 });

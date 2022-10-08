@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common/decorators';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 
@@ -9,5 +9,10 @@ export class BooksController {
   @Post()
   create(@Body() createBookDto: CreateBookDto) {
     return this.booksService.create(createBookDto);
+  }
+
+  @Get()
+  findAll() {
+    return this.booksService.findAll();
   }
 }
