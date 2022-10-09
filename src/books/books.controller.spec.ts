@@ -2,27 +2,25 @@ import * as request from 'supertest';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../prisma/prisma.service';
-import { BooksModule } from './books.module';
 import { BooksService } from './books.service';
 import { BooksRepository } from './repositories/implementations/books.repository';
+import { BooksController } from './books.controller';
 
 describe('BooksController', () => {
   let app: INestApplication;
-  let booksService: BooksService;
-  let booksRepository: BooksRepository;
-  let prismaService: PrismaService;
 
-  beforeEach(async () => {
-    prismaService = new PrismaService();
-    booksRepository = new BooksRepository(prismaService);
-    booksService = new BooksService(booksRepository);
-
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [BooksModule],
-    })
-      .overrideProvider(BooksService)
-      .useValue(booksService)
-      .compile();
+      controllers: [BooksController],
+      providers: [
+        BooksService,
+        PrismaService,
+        {
+          provide: 'IBooksRepository',
+          useClass: BooksRepository,
+        },
+      ],
+    }).compile();
 
     app = module.createNestApplication();
     await app.init();

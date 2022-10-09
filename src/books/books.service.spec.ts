@@ -1,14 +1,23 @@
 import { ImATeapotException } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
 import { BooksService } from './books.service';
 import { BooksRepository } from './repositories/in-memory/books.repository';
 
 describe('BooksService', () => {
   let booksService: BooksService;
-  let booksRepository: BooksRepository;
 
   beforeEach(async () => {
-    booksRepository = new BooksRepository();
-    booksService = new BooksService(booksRepository);
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        BooksService,
+        {
+          provide: 'IBooksRepository',
+          useClass: BooksRepository,
+        },
+      ],
+    }).compile();
+
+    booksService = module.get<BooksService>(BooksService);
   });
 
   describe('Create a new book', () => {
@@ -47,7 +56,6 @@ describe('BooksService', () => {
       });
 
       const books = await booksService.findAll();
-      console.log(books);
 
       expect(books).toStrictEqual([book1, book2, book3]);
     });
