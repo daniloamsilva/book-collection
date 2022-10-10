@@ -100,4 +100,29 @@ describe('BooksService', () => {
       );
     });
   });
+
+  describe('Update a book', () => {
+    it('should be to update a book', async () => {
+      let book = await booksService.create({
+        title: 'Book 1',
+        pages: 10,
+      });
+
+      book = await booksService.update(book.id, {
+        title: 'Book 2',
+        pages: 20,
+      });
+
+      expect(book).toBe(book);
+    });
+
+    it('should not be able to update a non-existent book', async () => {
+      await expect(
+        booksService.update('nonexistentbook', {
+          title: 'Book title',
+          pages: 100,
+        }),
+      ).rejects.toEqual(new NotFoundException(errors.NON_EXISTENT_BOOK));
+    });
+  });
 });

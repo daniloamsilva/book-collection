@@ -81,6 +81,27 @@ describe('BooksController', () => {
     });
   });
 
+  describe('PATCH /books/:id', () => {
+    it('should be able to update a book', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/books')
+        .send({ title: 'Book name', pages: 100 });
+
+      const { id } = response.body;
+      return request(app.getHttpServer())
+        .patch(`/books/${id}`)
+        .send({ title: 'Book name 2', pages: 200 })
+        .expect(200);
+    });
+
+    it('should not be able to update a non-existent book', () => {
+      return request(app.getHttpServer())
+        .patch('/books/nonexistentbook')
+        .send({ title: 'Book name 2', pages: 200 })
+        .expect(404);
+    });
+  });
+
   afterAll(async () => {
     await app.close();
   });

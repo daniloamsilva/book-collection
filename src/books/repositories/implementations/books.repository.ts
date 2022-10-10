@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { UpdateBookDto } from 'src/books/dto/update-book.dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { CreateBookDto } from '../../dto/create-book.dto';
 import { BookEntity } from '../../entities/book.entity';
@@ -26,6 +27,11 @@ export class BooksRepository implements IBooksRepository {
 
   async findOne(id: string): Promise<BookEntity> {
     const book = await this.prisma.book.findUnique({ where: { id } });
+    return book;
+  }
+
+  async update(id: string, data: UpdateBookDto): Promise<BookEntity> {
+    const book = await this.prisma.book.update({ where: { id }, data });
     return book;
   }
 }

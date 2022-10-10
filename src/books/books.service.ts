@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common/exceptions';
 import { errors } from './books.error';
 import { CreateBookDto } from './dto/create-book.dto';
+import { UpdateBookDto } from './dto/update-book.dto';
 import { IBooksRepository } from './repositories/interfaces/books-repository.interface';
 
 @Injectable()
@@ -30,6 +31,15 @@ export class BooksService {
 
     if (!book) throw new NotFoundException(errors.NON_EXISTENT_BOOK);
 
+    return book;
+  }
+
+  async update(id: string, updateCrudDto: UpdateBookDto) {
+    let book = await this.booksRepository.findOne(id);
+
+    if (!book) throw new NotFoundException(errors.NON_EXISTENT_BOOK);
+
+    book = await this.booksRepository.update(id, updateCrudDto);
     return book;
   }
 }
