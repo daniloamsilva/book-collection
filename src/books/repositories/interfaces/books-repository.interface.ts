@@ -4,4 +4,5 @@ import { BookEntity } from 'src/books/entities/book.entity';
 export interface IBooksRepository {
   create(data: CreateBookDto): Promise<BookEntity>;
   findAll(): Promise<BookEntity[]>;
+  findOne(id: string): Promise<BookEntity>;
 }

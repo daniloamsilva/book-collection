@@ -1,5 +1,6 @@
-import { ImATeapotException } from '@nestjs/common';
+import { ImATeapotException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { errors } from './books.error';
 import { BooksService } from './books.service';
 import { BooksRepository } from './repositories/in-memory/books.repository';
 
@@ -36,7 +37,7 @@ describe('BooksService', () => {
           title: 'Book title',
           pages: 0,
         }),
-      ).rejects.toEqual(new ImATeapotException('Zero páginas.'));
+      ).rejects.toEqual(new ImATeapotException(errors.ZERO_PAGES));
     });
   });
 
@@ -58,6 +59,45 @@ describe('BooksService', () => {
       const books = await booksService.findAll();
 
       expect(books).toStrictEqual([book1, book2, book3]);
+    });
+  });
+
+  describe('Find a book', () => {
+    it('should be able to find a book', async () => {
+      await booksService.create({
+        title: 'Book 1',
+        pages: 10,
+      });
+      const book2 = await booksService.create({
+        title: 'Book 2',
+        pages: 20,
+      });
+      await booksService.create({
+        title: 'Book 3',
+        pages: 30,
+      });
+
+      const book = await booksService.findOne(book2.id);
+      expect(book).toBe(book2);
+    });
+
+    it('should not be able find a non-existent book', async () => {
+      await booksService.create({
+        title: 'Book 1',
+        pages: 10,
+      });
+      await booksService.create({
+        title: 'Book 2',
+        pages: 20,
+      });
+      await booksService.create({
+        title: 'Book 3',
+        pages: 30,
+      });
+
+      await expect(booksService.findOne('lkjfdalsjfd')).rejects.toEqual(
+        new NotFoundException(errors.NON_EXISTENT_BOOK),
+      );
     });
   });
 });
