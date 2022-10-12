@@ -37,4 +37,10 @@ export class BooksRepository implements IBooksRepository {
 
     return this.books[findIndex];
   }
+
+  async delete(id: string): Promise<void> {
+    const index = this.books.findIndex((b) => b.id === id);
+    this.books.splice(index, 1);
+    return;
+  }
 }

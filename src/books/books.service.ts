@@ -42,4 +42,12 @@ export class BooksService {
     book = await this.booksRepository.update(id, updateCrudDto);
     return book;
   }
+
+  async delete(id: string) {
+    const book = await this.booksRepository.findOne(id);
+
+    if (!book) throw new NotFoundException(errors.NON_EXISTENT_BOOK);
+
+    return this.booksRepository.delete(id);
+  }
 }

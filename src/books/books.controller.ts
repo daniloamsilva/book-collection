@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -38,5 +39,11 @@ export class BooksController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
     return this.booksService.update(id, updateBookDto);
+  }
+
+  @ApiOperation({ summary: 'Remover um livro' })
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.booksService.delete(id);
   }
 }

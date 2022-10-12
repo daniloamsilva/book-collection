@@ -125,4 +125,34 @@ describe('BooksService', () => {
       ).rejects.toEqual(new NotFoundException(errors.NON_EXISTENT_BOOK));
     });
   });
+
+  describe('Delete a book', () => {
+    it('should be able to delete a book', async () => {
+      const book1 = await booksService.create({
+        title: 'Book 1',
+        pages: 10,
+      });
+
+      const book2 = await booksService.create({
+        title: 'Book 2',
+        pages: 20,
+      });
+
+      const book3 = await booksService.create({
+        title: 'Book 3',
+        pages: 30,
+      });
+
+      await booksService.delete(book2.id);
+
+      const books = await booksService.findAll();
+      expect(books).toStrictEqual([book1, book3]);
+    });
+
+    it('should not be able to delete a non-existent book', async () => {
+      await expect(booksService.delete('nonexistentbook')).rejects.toEqual(
+        new NotFoundException(errors.NON_EXISTENT_BOOK),
+      );
+    });
+  });
 });

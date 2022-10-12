@@ -34,4 +34,9 @@ export class BooksRepository implements IBooksRepository {
     const book = await this.prisma.book.update({ where: { id }, data });
     return book;
   }
+
+  async delete(id: string): Promise<void> {
+    await this.prisma.book.delete({ where: { id } });
+    return;
+  }
 }

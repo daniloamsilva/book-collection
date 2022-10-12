@@ -7,4 +7,5 @@ export interface IBooksRepository {
   findAll(): Promise<BookEntity[]>;
   findOne(id: string): Promise<BookEntity>;
   update(id: string, data: UpdateBookDto): Promise<BookEntity>;
+  delete(id: string): Promise<void>;
 }

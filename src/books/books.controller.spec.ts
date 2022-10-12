@@ -102,6 +102,24 @@ describe('BooksController', () => {
     });
   });
 
+  describe('DELETE /books/:id', () => {
+    it('should be able to delete a book', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/books')
+        .send({ title: 'Book name', pages: 100 });
+
+      const { id } = response.body;
+
+      return request(app.getHttpServer()).delete(`/books/${id}`).expect(200);
+    });
+
+    it('should not be able to delete a non-existent book', () => {
+      return request(app.getHttpServer())
+        .delete('/books/nonexistentbook')
+        .expect(404);
+    });
+  });
+
   afterAll(async () => {
     await app.close();
   });
