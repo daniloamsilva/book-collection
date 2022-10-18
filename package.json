@@ -88,6 +88,7 @@
     "testEnvironment": "../prisma/prisma-test-environment.ts",
     "coveragePathIgnorePatterns": [
       ".module.ts",
+      ".strategy.ts",
       "src/main",
       "src/prisma/prisma.service.ts",
       "src/crud/*"
