@@ -4,6 +4,8 @@ import { JwtService } from '@nestjs/jwt';
 import { IUsersRepository } from '../users/repositories/interfaces/users-repository.interface';
 import { UsersService } from '../users/users.service';
 import { SignupDto } from './dto/signup.dto';
+import { ForbiddenException } from '@nestjs/common/exceptions';
+import { errors } from './auth.error';
 
 @Injectable()
 export class AuthService {
@@ -35,8 +37,10 @@ export class AuthService {
     };
   }
 
-  async signup(signupDto: SignupDto): Promise<boolean> {
-    const user = this.usersRepository.create(signupDto);
-    return !!user;
+  async signup({ username, password }: SignupDto): Promise<boolean> {
+    const user = await this.usersRepository.findByUsername(username);
+    if (user) throw new ForbiddenException(errors.USERNAME_ALREADY_EXISTS);
+    this.usersRepository.create({ username, password });
+    return;
   }
 }

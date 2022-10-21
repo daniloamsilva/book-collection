@@ -2,6 +2,7 @@ import { SignupDto } from '../../../auth/dto/signup.dto';
 import { UserEntity } from '../../entities/user.entity';
 
 export interface IUsersRepository {
-  findOne(id: string): Promise<UserEntity>;
+  findById(id: string): Promise<UserEntity | undefined>;
+  findByUsername(id: string): Promise<UserEntity | undefined>;
   create(data: SignupDto): Promise<UserEntity>;
 }
