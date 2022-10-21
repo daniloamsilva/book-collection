@@ -1,3 +1,4 @@
+import * as bcrypt from 'bcrypt';
 import { Injectable, Inject } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { IUsersRepository } from '../users/repositories/interfaces/users-repository.interface';
@@ -14,11 +15,16 @@ export class AuthService {
 
   async validateUser(username: string, pass: string): Promise<any> {
     const user = await this.usersService.findOne(username);
-    if (user && user.password === pass) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...result } = user;
-      return result;
+
+    if (user) {
+      const isMatch = await bcrypt.compare(pass, user.password);
+      if (isMatch) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password, ...result } = user;
+        return result;
+      }
     }
+
     return null;
   }
 

@@ -1,3 +1,4 @@
+import * as bcrypt from 'bcrypt';
 import { Injectable } from '@nestjs/common/decorators';
 import { SignupDto } from '../../../auth/dto/signup.dto';
 import { PrismaService } from '../../../prisma/prisma.service';
@@ -8,8 +9,13 @@ import { IUsersRepository } from '../interfaces/users-repository.interface';
 export class UsersRepository implements IUsersRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(data: SignupDto): Promise<UserEntity> {
-    const user = await this.prisma.user.create({ data });
+  async create({ username, password }: SignupDto): Promise<UserEntity> {
+    const user = await this.prisma.user.create({
+      data: {
+        username,
+        password: await bcrypt.hash(password, 10),
+      },
+    });
     return user;
   }
 
