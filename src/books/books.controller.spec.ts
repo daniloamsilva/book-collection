@@ -5,9 +5,13 @@ import { PrismaService } from '../prisma/prisma.service';
 import { BooksService } from './books.service';
 import { BooksRepository } from './repositories/implementations/books.repository';
 import { BooksController } from './books.controller';
+import { JwtService } from '@nestjs/jwt';
+import { JwtStrategy } from '../auth/jwt.strategy';
 
 describe('BooksController', () => {
   let app: INestApplication;
+  let token: string;
+  let jwtService: JwtService;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -15,6 +19,7 @@ describe('BooksController', () => {
       providers: [
         BooksService,
         PrismaService,
+        JwtStrategy,
         {
           provide: 'IBooksRepository',
           useClass: BooksRepository,
@@ -32,12 +37,16 @@ describe('BooksController', () => {
     );
 
     await app.init();
+
+    jwtService = new JwtService({ secretOrPrivateKey: process.env.JWT_SECRET });
+    token = jwtService.sign({});
   });
 
   describe('POST /books', () => {
     it('should be able to create a new book', () => {
       return request(app.getHttpServer())
         .post('/books')
+        .set('Authorization', `Bearer ${token}`)
         .send({ title: 'Book name', pages: 100 })
         .expect(201);
     });
@@ -45,6 +54,7 @@ describe('BooksController', () => {
     it('should not be able to create a book without a title', () => {
       return request(app.getHttpServer())
         .post('/books')
+        .set('Authorization', `Bearer ${token}`)
         .send({ pages: 100 })
         .expect(400);
     });
@@ -52,6 +62,7 @@ describe('BooksController', () => {
     it('should not be able to create a book with zero pages', () => {
       return request(app.getHttpServer())
         .post('/books')
+        .set('Authorization', `Bearer ${token}`)
         .send({ title: 'Book name', pages: 0 })
         .expect(418);
     });
@@ -59,7 +70,10 @@ describe('BooksController', () => {
 
   describe('GET /books', () => {
     it('should be able to list all books', () => {
-      return request(app.getHttpServer()).get('/books').expect(200);
+      return request(app.getHttpServer())
+        .get('/books')
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
     });
   });
 
@@ -67,16 +81,21 @@ describe('BooksController', () => {
     it('should be able to find a book', async () => {
       const response = await request(app.getHttpServer())
         .post('/books')
+        .set('Authorization', `Bearer ${token}`)
         .send({ title: 'Book name', pages: 100 });
 
       const { id } = response.body;
 
-      return request(app.getHttpServer()).get(`/books/${id}`).expect(200);
+      return request(app.getHttpServer())
+        .get(`/books/${id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
     });
 
     it('should not be able to find a non-existent book', () => {
       return request(app.getHttpServer())
         .get('/books/nonexistentbook')
+        .set('Authorization', `Bearer ${token}`)
         .expect(404);
     });
   });
@@ -85,11 +104,13 @@ describe('BooksController', () => {
     it('should be able to update a book', async () => {
       const response = await request(app.getHttpServer())
         .post('/books')
+        .set('Authorization', `Bearer ${token}`)
         .send({ title: 'Book name', pages: 100 });
 
       const { id } = response.body;
       return request(app.getHttpServer())
         .patch(`/books/${id}`)
+        .set('Authorization', `Bearer ${token}`)
         .send({ title: 'Book name 2', pages: 200 })
         .expect(200);
     });
@@ -97,6 +118,7 @@ describe('BooksController', () => {
     it('should not be able to update a non-existent book', () => {
       return request(app.getHttpServer())
         .patch('/books/nonexistentbook')
+        .set('Authorization', `Bearer ${token}`)
         .send({ title: 'Book name 2', pages: 200 })
         .expect(404);
     });
@@ -106,16 +128,21 @@ describe('BooksController', () => {
     it('should be able to delete a book', async () => {
       const response = await request(app.getHttpServer())
         .post('/books')
+        .set('Authorization', `Bearer ${token}`)
         .send({ title: 'Book name', pages: 100 });
 
       const { id } = response.body;
 
-      return request(app.getHttpServer()).delete(`/books/${id}`).expect(200);
+      return request(app.getHttpServer())
+        .delete(`/books/${id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
     });
 
     it('should not be able to delete a non-existent book', () => {
       return request(app.getHttpServer())
         .delete('/books/nonexistentbook')
+        .set('Authorization', `Bearer ${token}`)
         .expect(404);
     });
   });

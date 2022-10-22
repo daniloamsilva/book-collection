@@ -9,11 +9,6 @@ import { IUsersRepository } from '../interfaces/users-repository.interface';
 export class UsersRepository implements IUsersRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findById(id: string): Promise<UserEntity | undefined> {
-    const user = await this.prisma.user.findUnique({ where: { id } });
-    return user;
-  }
-
   async findByUsername(username: string): Promise<UserEntity | undefined> {
     const user = await this.prisma.user.findUnique({ where: { username } });
     return user;
