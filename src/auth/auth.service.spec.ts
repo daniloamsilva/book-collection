@@ -1,7 +1,6 @@
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { Test, TestingModule } from '@nestjs/testing';
-import { UsersModule } from '../users/users.module';
 import { UsersRepository } from '../users/repositories/in-memory/users.repository';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
@@ -9,11 +8,25 @@ import { LocalStrategy } from './local.strategy';
 import { UserEntity } from '../users/entities/user.entity';
 import { ForbiddenException } from '@nestjs/common/exceptions';
 import { errors } from './auth.error';
+import { Module } from '@nestjs/common/decorators';
+import { UsersService } from '../users/users.service';
 
 describe('AuthService', () => {
   let authService: AuthService;
 
   beforeEach(async () => {
+    @Module({
+      exports: [UsersService],
+      providers: [
+        UsersService,
+        {
+          provide: 'IUsersRepository',
+          useClass: UsersRepository,
+        },
+      ],
+    })
+    class UsersModule {}
+
     const authModule: TestingModule = await Test.createTestingModule({
       imports: [
         UsersModule,

@@ -10,6 +10,7 @@ config({ path: '.env' });
 export default class PrismaTestEnvironment extends NodeEnvironment {
   private schema: string;
   private connectionString: string;
+  private isE2ETest: boolean;
 
   constructor(config: JestEnvironmentConfig, context: any) {
     super(config, context);
@@ -22,24 +23,31 @@ export default class PrismaTestEnvironment extends NodeEnvironment {
 
     this.schema = `test_${uuid()}`;
     this.connectionString = `postgresql://${dbUser}:${dbPass}@${dbHost}:${dbPort}/${dbName}?schema=${this.schema}`;
+
+    const regex = new RegExp('.controller.spec.ts$');
+    this.isE2ETest = regex.test(context.testPath);
   }
 
   setup() {
-    process.env.DATABASE_URL = this.connectionString;
-    this.global.process.env.DATABASE_URL = this.connectionString;
+    if (this.isE2ETest) {
+      process.env.DATABASE_URL = this.connectionString;
+      this.global.process.env.DATABASE_URL = this.connectionString;
 
-    execSync(`yarn prisma migrate deploy`);
+      execSync(`yarn prisma migrate deploy`);
+    }
 
     return super.setup();
   }
 
   async teardown() {
-    const client = new Client({
-      connectionString: this.connectionString,
-    });
+    if (this.isE2ETest) {
+      const client = new Client({
+        connectionString: this.connectionString,
+      });
 
-    await client.connect();
-    await client.query(`DROP SCHEMA IF EXISTS "${this.schema}" CASCADE`);
-    await client.end();
+      await client.connect();
+      await client.query(`DROP SCHEMA IF EXISTS "${this.schema}" CASCADE`);
+      await client.end();
+    }
   }
 }
