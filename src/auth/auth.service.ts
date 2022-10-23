@@ -31,7 +31,8 @@ export class AuthService {
     return null;
   }
 
-  async login(user: any) {
+  async login(body: any) {
+    const user = await this.usersRepository.findByUsername(body.username);
     const payload = { username: user.username, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),

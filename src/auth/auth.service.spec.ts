@@ -62,17 +62,6 @@ describe('AuthService', () => {
     });
   });
 
-  describe('Token generate', () => {
-    it('should be able to generate a new JWT token', async () => {
-      const response = await authService.login({
-        username: 'user test',
-        password: 'user test',
-      });
-
-      expect(response).toHaveProperty('access_token');
-    });
-  });
-
   describe('User validation', () => {
     it('should not be able to validate a non-existent user', async () => {
       const result = await authService.validateUser(

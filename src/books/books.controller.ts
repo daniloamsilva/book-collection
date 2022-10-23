@@ -9,12 +9,13 @@ import {
   UseGuards,
 } from '@nestjs/common/decorators';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 
 @ApiTags('Books')
+@ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'))
 @Controller('books')
 export class BooksController {
