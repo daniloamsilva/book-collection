@@ -6,6 +6,7 @@ import { UsersService } from '../users/users.service';
 import { SignupDto } from './dto/signup.dto';
 import { ForbiddenException } from '@nestjs/common/exceptions';
 import { errors } from './auth.error';
+import { UserEntity } from '../users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -37,10 +38,10 @@ export class AuthService {
     };
   }
 
-  async signup({ username, password }: SignupDto): Promise<boolean> {
-    const user = await this.usersRepository.findByUsername(username);
+  async signup({ username, password }: SignupDto): Promise<UserEntity> {
+    let user = await this.usersRepository.findByUsername(username);
     if (user) throw new ForbiddenException(errors.USERNAME_ALREADY_EXISTS);
-    this.usersRepository.create({ username, password });
-    return;
+    user = await this.usersRepository.create({ username, password });
+    return user;
   }
 }
