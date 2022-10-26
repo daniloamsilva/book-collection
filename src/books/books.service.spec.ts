@@ -84,7 +84,7 @@ describe('BooksService', () => {
         pages: 30,
       });
 
-      const book = await booksService.findOne(book2.id);
+      const book = await booksService.findOne('user_id', book2.id);
       expect(book).toBe(book2);
     });
 
@@ -102,8 +102,19 @@ describe('BooksService', () => {
         pages: 30,
       });
 
-      await expect(booksService.findOne('lkjfdalsjfd')).rejects.toEqual(
-        new NotFoundException(errors.NON_EXISTENT_BOOK),
+      await expect(
+        booksService.findOne('user_id', 'not-existent-book'),
+      ).rejects.toEqual(new NotFoundException(errors.NON_EXISTENT_BOOK));
+    });
+
+    it('should not be able find a book that does not belong to the user', async () => {
+      const book = await booksService.create('another_user', {
+        title: 'Book 1',
+        pages: 10,
+      });
+
+      await expect(booksService.findOne('user_id', book.id)).rejects.toEqual(
+        new NotFoundException(errors.NOT_BELONG_TO_THE_USER),
       );
     });
   });

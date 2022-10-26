@@ -16,7 +16,8 @@ import { UsersRepository } from '../users/repositories/implementations/users.rep
 
 describe('BooksController', () => {
   let app: INestApplication;
-  let token: string;
+  let primaryToken: string;
+  let secondaryToken: string;
 
   beforeAll(async () => {
     const authModule: TestingModule = await Test.createTestingModule({
@@ -46,15 +47,27 @@ describe('BooksController', () => {
 
     await request(app.getHttpServer())
       .post('/auth/signup')
-      .send({ username: 'test user', password: 'test user' })
+      .send({ username: 'primary user', password: 'primary user' })
       .expect(201);
 
-    const loginResponse = await request(app.getHttpServer())
+    let loginResponse = await request(app.getHttpServer())
       .post('/auth/signin')
-      .send({ username: 'test user', password: 'test user' })
+      .send({ username: 'primary user', password: 'primary user' })
       .expect(201);
 
-    token = loginResponse.body.access_token;
+    primaryToken = loginResponse.body.access_token;
+
+    await request(app.getHttpServer())
+      .post('/auth/signup')
+      .send({ username: 'secondary user', password: 'secondary user' })
+      .expect(201);
+
+    loginResponse = await request(app.getHttpServer())
+      .post('/auth/signin')
+      .send({ username: 'secondary user', password: 'secondary user' })
+      .expect(201);
+
+    secondaryToken = loginResponse.body.access_token;
 
     const booksModule: TestingModule = await Test.createTestingModule({
       controllers: [BooksController],
@@ -85,7 +98,7 @@ describe('BooksController', () => {
     it('should be able to create a new book', () => {
       return request(app.getHttpServer())
         .post('/books')
-        .set('Authorization', `Bearer ${token}`)
+        .set('Authorization', `Bearer ${primaryToken}`)
         .send({ title: 'Book name', pages: 100 })
         .expect(201);
     });
@@ -93,7 +106,7 @@ describe('BooksController', () => {
     it('should not be able to create a book without a title', () => {
       return request(app.getHttpServer())
         .post('/books')
-        .set('Authorization', `Bearer ${token}`)
+        .set('Authorization', `Bearer ${primaryToken}`)
         .send({ pages: 100 })
         .expect(400);
     });
@@ -101,7 +114,7 @@ describe('BooksController', () => {
     it('should not be able to create a book with zero pages', () => {
       return request(app.getHttpServer())
         .post('/books')
-        .set('Authorization', `Bearer ${token}`)
+        .set('Authorization', `Bearer ${primaryToken}`)
         .send({ title: 'Book name', pages: 0 })
         .expect(418);
     });
@@ -111,7 +124,7 @@ describe('BooksController', () => {
     it('should be able to list all books', () => {
       return request(app.getHttpServer())
         .get('/books')
-        .set('Authorization', `Bearer ${token}`)
+        .set('Authorization', `Bearer ${primaryToken}`)
         .expect(200);
     });
   });
@@ -120,22 +133,36 @@ describe('BooksController', () => {
     it('should be able to find a book', async () => {
       const response = await request(app.getHttpServer())
         .post('/books')
-        .set('Authorization', `Bearer ${token}`)
+        .set('Authorization', `Bearer ${primaryToken}`)
         .send({ title: 'Book name', pages: 100 });
 
       const { id } = response.body;
 
       return request(app.getHttpServer())
         .get(`/books/${id}`)
-        .set('Authorization', `Bearer ${token}`)
+        .set('Authorization', `Bearer ${primaryToken}`)
         .expect(200);
     });
 
     it('should not be able to find a non-existent book', () => {
       return request(app.getHttpServer())
         .get('/books/nonexistentbook')
-        .set('Authorization', `Bearer ${token}`)
+        .set('Authorization', `Bearer ${primaryToken}`)
         .expect(404);
+    });
+
+    it('should not be able find a book that does not belong to the user', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/books')
+        .set('Authorization', `Bearer ${secondaryToken}`)
+        .send({ title: 'Book name', pages: 100 });
+
+      const { id } = response.body;
+
+      return request(app.getHttpServer())
+        .get(`/books/${id}`)
+        .set('Authorization', `Bearer ${primaryToken}`)
+        .expect(403);
     });
   });
 
@@ -143,13 +170,13 @@ describe('BooksController', () => {
     it('should be able to update a book', async () => {
       const response = await request(app.getHttpServer())
         .post('/books')
-        .set('Authorization', `Bearer ${token}`)
+        .set('Authorization', `Bearer ${primaryToken}`)
         .send({ title: 'Book name', pages: 100 });
 
       const { id } = response.body;
       return request(app.getHttpServer())
         .patch(`/books/${id}`)
-        .set('Authorization', `Bearer ${token}`)
+        .set('Authorization', `Bearer ${primaryToken}`)
         .send({ title: 'Book name 2', pages: 200 })
         .expect(200);
     });
@@ -157,7 +184,7 @@ describe('BooksController', () => {
     it('should not be able to update a non-existent book', () => {
       return request(app.getHttpServer())
         .patch('/books/nonexistentbook')
-        .set('Authorization', `Bearer ${token}`)
+        .set('Authorization', `Bearer ${primaryToken}`)
         .send({ title: 'Book name 2', pages: 200 })
         .expect(404);
     });
@@ -167,21 +194,21 @@ describe('BooksController', () => {
     it('should be able to delete a book', async () => {
       const response = await request(app.getHttpServer())
         .post('/books')
-        .set('Authorization', `Bearer ${token}`)
+        .set('Authorization', `Bearer ${primaryToken}`)
         .send({ title: 'Book name', pages: 100 });
 
       const { id } = response.body;
 
       return request(app.getHttpServer())
         .delete(`/books/${id}`)
-        .set('Authorization', `Bearer ${token}`)
+        .set('Authorization', `Bearer ${primaryToken}`)
         .expect(200);
     });
 
     it('should not be able to delete a non-existent book', () => {
       return request(app.getHttpServer())
         .delete('/books/nonexistentbook')
-        .set('Authorization', `Bearer ${token}`)
+        .set('Authorization', `Bearer ${primaryToken}`)
         .expect(404);
     });
   });

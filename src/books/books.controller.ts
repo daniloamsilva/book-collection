@@ -37,8 +37,8 @@ export class BooksController {
 
   @ApiOperation({ summary: 'Encontrar um livro' })
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.booksService.findOne(id);
+  findOne(@User() user: UserEntity, @Param('id') id: string) {
+    return this.booksService.findOne(user.id, id);
   }
 
   @ApiOperation({ summary: 'Editar um livro' })

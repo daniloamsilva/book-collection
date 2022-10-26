@@ -5,4 +5,5 @@ export const errors = {
   PAGES_IS_NOT_EMPTY: 'O número de páginas é obrigatório.',
   NON_EXISTENT_BOOK: 'O livro não foi encontrado.',
   ZERO_PAGES: 'O número de páginas não pode ser zero.',
+  NOT_BELONG_TO_THE_USER: 'O livro não pertence a este usuário.',
 };

@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common/decorators';
 import {
+  ForbiddenException,
   ImATeapotException,
   NotFoundException,
 } from '@nestjs/common/exceptions';
@@ -26,10 +27,12 @@ export class BooksService {
     return books;
   }
 
-  async findOne(id: string) {
+  async findOne(user_id: string, id: string) {
     const book = await this.booksRepository.findOne(id);
 
     if (!book) throw new NotFoundException(errors.NON_EXISTENT_BOOK);
+    if (book.user_id !== user_id)
+      throw new ForbiddenException(errors.NOT_BELONG_TO_THE_USER);
 
     return book;
   }
