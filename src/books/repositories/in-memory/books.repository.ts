@@ -13,8 +13,9 @@ export class BooksRepository implements IBooksRepository {
     return book;
   }
 
-  async findAll(): Promise<BookEntity[]> {
-    return this.books;
+  async findAll(user_id: string): Promise<BookEntity[]> {
+    const books = this.books.filter((b) => b.user_id === user_id);
+    return books;
   }
 
   async findOne(id: string): Promise<BookEntity> {

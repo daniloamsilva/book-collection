@@ -58,7 +58,12 @@ describe('BooksService', () => {
         pages: 30,
       });
 
-      const books = await booksService.findAll();
+      await booksService.create('user_id2', {
+        title: 'Book 4',
+        pages: 30,
+      });
+
+      const books = await booksService.findAll('user_id');
 
       expect(books).toStrictEqual([book1, book2, book3]);
     });
@@ -147,7 +152,7 @@ describe('BooksService', () => {
 
       await booksService.delete(book2.id);
 
-      const books = await booksService.findAll();
+      const books = await booksService.findAll('user_id');
       expect(books).toStrictEqual([book1, book3]);
     });
 

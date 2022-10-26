@@ -21,8 +21,8 @@ export class BooksService {
     return book;
   }
 
-  async findAll() {
-    const books = await this.booksRepository.findAll();
+  async findAll(user_id: string) {
+    const books = await this.booksRepository.findAll(user_id);
     return books;
   }
 

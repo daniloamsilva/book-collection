@@ -31,8 +31,8 @@ export class BooksController {
 
   @ApiOperation({ summary: 'Listar todos os livros' })
   @Get()
-  findAll() {
-    return this.booksService.findAll();
+  findAll(@User() user: UserEntity) {
+    return this.booksService.findAll(user.id);
   }
 
   @ApiOperation({ summary: 'Encontrar um livro' })
