@@ -23,17 +23,19 @@ describe('BooksService', () => {
 
   describe('Create a new book', () => {
     it('should be able to create a new book', async () => {
-      const book = await booksService.create({
+      const book = await booksService.create('user_id', {
         title: 'Book title',
         pages: 100,
       });
 
       expect(book).toHaveProperty('id');
+      expect(book).toHaveProperty('title');
+      expect(book).toHaveProperty('user_id');
     });
 
     it('should not be able to create a book with zero pages', async () => {
       await expect(
-        booksService.create({
+        booksService.create('user_id', {
           title: 'Book title',
           pages: 0,
         }),
@@ -43,15 +45,15 @@ describe('BooksService', () => {
 
   describe('List all books', () => {
     it('should be able to list all books', async () => {
-      const book1 = await booksService.create({
+      const book1 = await booksService.create('user_id', {
         title: 'Book 1',
         pages: 10,
       });
-      const book2 = await booksService.create({
+      const book2 = await booksService.create('user_id', {
         title: 'Book 2',
         pages: 20,
       });
-      const book3 = await booksService.create({
+      const book3 = await booksService.create('user_id', {
         title: 'Book 3',
         pages: 30,
       });
@@ -64,15 +66,15 @@ describe('BooksService', () => {
 
   describe('Find a book', () => {
     it('should be able to find a book', async () => {
-      await booksService.create({
+      await booksService.create('user_id', {
         title: 'Book 1',
         pages: 10,
       });
-      const book2 = await booksService.create({
+      const book2 = await booksService.create('user_id', {
         title: 'Book 2',
         pages: 20,
       });
-      await booksService.create({
+      await booksService.create('user_id', {
         title: 'Book 3',
         pages: 30,
       });
@@ -82,15 +84,15 @@ describe('BooksService', () => {
     });
 
     it('should not be able find a non-existent book', async () => {
-      await booksService.create({
+      await booksService.create('user_id', {
         title: 'Book 1',
         pages: 10,
       });
-      await booksService.create({
+      await booksService.create('user_id', {
         title: 'Book 2',
         pages: 20,
       });
-      await booksService.create({
+      await booksService.create('user_id', {
         title: 'Book 3',
         pages: 30,
       });
@@ -103,7 +105,7 @@ describe('BooksService', () => {
 
   describe('Update a book', () => {
     it('should be to update a book', async () => {
-      let book = await booksService.create({
+      let book = await booksService.create('user_id', {
         title: 'Book 1',
         pages: 10,
       });
@@ -128,17 +130,17 @@ describe('BooksService', () => {
 
   describe('Delete a book', () => {
     it('should be able to delete a book', async () => {
-      const book1 = await booksService.create({
+      const book1 = await booksService.create('user_id', {
         title: 'Book 1',
         pages: 10,
       });
 
-      const book2 = await booksService.create({
+      const book2 = await booksService.create('user_id', {
         title: 'Book 2',
         pages: 20,
       });
 
-      const book3 = await booksService.create({
+      const book3 = await booksService.create('user_id', {
         title: 'Book 3',
         pages: 30,
       });

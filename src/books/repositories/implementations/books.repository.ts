@@ -9,11 +9,15 @@ import { IBooksRepository } from '../interfaces/books-repository.interface';
 export class BooksRepository implements IBooksRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create({ title, pages }: CreateBookDto): Promise<BookEntity> {
+  async create(
+    user_id: string,
+    { title, pages }: CreateBookDto,
+  ): Promise<BookEntity> {
     const book = await this.prisma.book.create({
       data: {
         title,
         pages,
+        user_id,
       },
     });
 

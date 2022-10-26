@@ -14,10 +14,10 @@ export class BooksService {
     @Inject('IBooksRepository') private booksRepository: IBooksRepository,
   ) {}
 
-  async create({ title, pages }: CreateBookDto) {
+  async create(user_id: string, { title, pages }: CreateBookDto) {
     if (!pages) throw new ImATeapotException(errors.ZERO_PAGES);
 
-    const book = await this.booksRepository.create({ title, pages });
+    const book = await this.booksRepository.create(user_id, { title, pages });
     return book;
   }
 

@@ -5,16 +5,58 @@ import { PrismaService } from '../prisma/prisma.service';
 import { BooksService } from './books.service';
 import { BooksRepository } from './repositories/implementations/books.repository';
 import { BooksController } from './books.controller';
-import { JwtService } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from '../auth/jwt.strategy';
+import { AuthController } from '../auth/auth.controller';
+import { UsersModule } from '../users/users.module';
+import { PassportModule } from '@nestjs/passport';
+import { AuthService } from '../auth/auth.service';
+import { LocalStrategy } from '../auth/local.strategy';
+import { UsersRepository } from '../users/repositories/implementations/users.repository';
 
 describe('BooksController', () => {
   let app: INestApplication;
   let token: string;
-  let jwtService: JwtService;
 
   beforeAll(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const authModule: TestingModule = await Test.createTestingModule({
+      controllers: [AuthController],
+      imports: [
+        UsersModule,
+        PassportModule,
+        JwtModule.register({
+          secret: process.env.JWT_SECRET,
+          signOptions: { expiresIn: '7d' },
+        }),
+      ],
+      providers: [
+        AuthService,
+        LocalStrategy,
+        PrismaService,
+        JwtStrategy,
+        {
+          provide: 'IUsersRepository',
+          useClass: UsersRepository,
+        },
+      ],
+    }).compile();
+
+    app = authModule.createNestApplication();
+    await app.init();
+
+    await request(app.getHttpServer())
+      .post('/auth/signup')
+      .send({ username: 'test user', password: 'test user' })
+      .expect(201);
+
+    const loginResponse = await request(app.getHttpServer())
+      .post('/auth/signin')
+      .send({ username: 'test user', password: 'test user' })
+      .expect(201);
+
+    token = loginResponse.body.access_token;
+
+    const booksModule: TestingModule = await Test.createTestingModule({
       controllers: [BooksController],
       providers: [
         BooksService,
@@ -27,7 +69,7 @@ describe('BooksController', () => {
       ],
     }).compile();
 
-    app = module.createNestApplication();
+    app = booksModule.createNestApplication();
 
     app.useGlobalPipes(
       new ValidationPipe({
@@ -37,9 +79,6 @@ describe('BooksController', () => {
     );
 
     await app.init();
-
-    jwtService = new JwtService({ secretOrPrivateKey: process.env.JWT_SECRET });
-    token = jwtService.sign({});
   });
 
   describe('POST /books', () => {
