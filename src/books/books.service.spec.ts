@@ -126,7 +126,7 @@ describe('BooksService', () => {
         pages: 10,
       });
 
-      book = await booksService.update(book.id, {
+      book = await booksService.update('user_id', book.id, {
         title: 'Book 2',
         pages: 20,
       });
@@ -136,11 +136,25 @@ describe('BooksService', () => {
 
     it('should not be able to update a non-existent book', async () => {
       await expect(
-        booksService.update('nonexistentbook', {
+        booksService.update('user_id', 'nonexistentbook', {
           title: 'Book title',
           pages: 100,
         }),
       ).rejects.toEqual(new NotFoundException(errors.NON_EXISTENT_BOOK));
+    });
+
+    it('should not be able to update a book that does not belong to the user', async () => {
+      const book = await booksService.create('another_user', {
+        title: 'Book 1',
+        pages: 10,
+      });
+
+      await expect(
+        booksService.update('user_id', book.id, {
+          title: 'Book title',
+          pages: 100,
+        }),
+      ).rejects.toEqual(new NotFoundException(errors.NOT_BELONG_TO_THE_USER));
     });
   });
 

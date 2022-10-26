@@ -43,8 +43,12 @@ export class BooksController {
 
   @ApiOperation({ summary: 'Editar um livro' })
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
-    return this.booksService.update(id, updateBookDto);
+  update(
+    @User() user: UserEntity,
+    @Param('id') id: string,
+    @Body() updateBookDto: UpdateBookDto,
+  ) {
+    return this.booksService.update(user.id, id, updateBookDto);
   }
 
   @ApiOperation({ summary: 'Remover um livro' })

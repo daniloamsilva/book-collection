@@ -188,6 +188,21 @@ describe('BooksController', () => {
         .send({ title: 'Book name 2', pages: 200 })
         .expect(404);
     });
+
+    it('should not be able to update a book that does not belong to the user', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/books')
+        .set('Authorization', `Bearer ${secondaryToken}`)
+        .send({ title: 'Book name', pages: 100 });
+
+      const { id } = response.body;
+
+      return request(app.getHttpServer())
+        .patch(`/books/${id}`)
+        .set('Authorization', `Bearer ${primaryToken}`)
+        .send({ title: 'Book name 2', pages: 200 })
+        .expect(403);
+    });
   });
 
   describe('DELETE /books/:id', () => {

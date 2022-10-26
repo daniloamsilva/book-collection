@@ -37,10 +37,12 @@ export class BooksService {
     return book;
   }
 
-  async update(id: string, updateCrudDto: UpdateBookDto) {
+  async update(user_id: string, id: string, updateCrudDto: UpdateBookDto) {
     let book = await this.booksRepository.findOne(id);
 
     if (!book) throw new NotFoundException(errors.NON_EXISTENT_BOOK);
+    if (book.user_id !== user_id)
+      throw new ForbiddenException(errors.NOT_BELONG_TO_THE_USER);
 
     book = await this.booksRepository.update(id, updateCrudDto);
     return book;
