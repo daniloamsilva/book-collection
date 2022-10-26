@@ -175,15 +175,26 @@ describe('BooksService', () => {
         pages: 30,
       });
 
-      await booksService.delete(book2.id);
+      await booksService.delete('user_id', book2.id);
 
       const books = await booksService.findAll('user_id');
       expect(books).toStrictEqual([book1, book3]);
     });
 
     it('should not be able to delete a non-existent book', async () => {
-      await expect(booksService.delete('nonexistentbook')).rejects.toEqual(
-        new NotFoundException(errors.NON_EXISTENT_BOOK),
+      await expect(
+        booksService.delete('user_id', 'nonexistentbook'),
+      ).rejects.toEqual(new NotFoundException(errors.NON_EXISTENT_BOOK));
+    });
+
+    it('should not be able to delete a book that does not belong to the user', async () => {
+      const book = await booksService.create('another_user', {
+        title: 'Book 1',
+        pages: 10,
+      });
+
+      await expect(booksService.delete('user_id', book.id)).rejects.toEqual(
+        new NotFoundException(errors.NOT_BELONG_TO_THE_USER),
       );
     });
   });

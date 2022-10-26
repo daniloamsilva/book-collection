@@ -226,6 +226,20 @@ describe('BooksController', () => {
         .set('Authorization', `Bearer ${primaryToken}`)
         .expect(404);
     });
+
+    it('should not be able to delete a book that does not belong to the user', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/books')
+        .set('Authorization', `Bearer ${secondaryToken}`)
+        .send({ title: 'Book name', pages: 100 });
+
+      const { id } = response.body;
+
+      return request(app.getHttpServer())
+        .delete(`/books/${id}`)
+        .set('Authorization', `Bearer ${primaryToken}`)
+        .expect(403);
+    });
   });
 
   afterAll(async () => {

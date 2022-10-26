@@ -48,10 +48,12 @@ export class BooksService {
     return book;
   }
 
-  async delete(id: string) {
+  async delete(user_id: string, id: string) {
     const book = await this.booksRepository.findOne(id);
 
     if (!book) throw new NotFoundException(errors.NON_EXISTENT_BOOK);
+    if (book.user_id !== user_id)
+      throw new ForbiddenException(errors.NOT_BELONG_TO_THE_USER);
 
     return this.booksRepository.delete(id);
   }

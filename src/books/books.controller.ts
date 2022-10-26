@@ -53,7 +53,7 @@ export class BooksController {
 
   @ApiOperation({ summary: 'Remover um livro' })
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.booksService.delete(id);
+  remove(@User() user: UserEntity, @Param('id') id: string) {
+    return this.booksService.delete(user.id, id);
   }
 }
