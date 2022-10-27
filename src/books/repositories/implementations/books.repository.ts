@@ -24,8 +24,8 @@ export class BooksRepository implements IBooksRepository {
     return book;
   }
 
-  async findAll(): Promise<BookEntity[]> {
-    const books = await this.prisma.book.findMany();
+  async findAll(user_id: string): Promise<BookEntity[]> {
+    const books = await this.prisma.book.findMany({ where: { user_id } });
     return books;
   }
 

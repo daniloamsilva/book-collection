@@ -121,11 +121,20 @@ describe('BooksController', () => {
   });
 
   describe('GET /books', () => {
-    it('should be able to list all books', () => {
+    it('should be able to list all books', async () => {
+      await request(app.getHttpServer())
+        .post('/books')
+        .set('Authorization', `Bearer ${secondaryToken}`)
+        .send({ title: 'Book name', pages: 100 })
+        .expect(201);
+
       return request(app.getHttpServer())
         .get('/books')
         .set('Authorization', `Bearer ${primaryToken}`)
-        .expect(200);
+        .expect(200)
+        .then((response) => {
+          expect(response.body.length).toBe(1);
+        });
     });
   });
 
