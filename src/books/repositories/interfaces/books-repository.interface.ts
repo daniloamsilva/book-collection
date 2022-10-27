@@ -3,8 +3,8 @@ import { UpdateBookDto } from 'src/books/dto/update-book.dto';
 import { BookEntity } from 'src/books/entities/book.entity';
 
 export interface IBooksRepository {
-  create(data: CreateBookDto): Promise<BookEntity>;
-  findAll(): Promise<BookEntity[]>;
+  create(user_id: string, data: CreateBookDto): Promise<BookEntity>;
+  findAll(user_id: string): Promise<BookEntity[]>;
   findOne(id: string): Promise<BookEntity>;
   update(id: string, data: UpdateBookDto): Promise<BookEntity>;
   delete(id: string): Promise<void>;

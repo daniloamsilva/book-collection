@@ -14,14 +14,17 @@ model User {
   id       String @id @default(uuid())
   username String @unique
   password String
+  books    Book[]
 
   @@map("users")
 }
 
 model Book {
-  id    String @id @default(uuid())
-  title String
-  pages Int
+  id      String @id @default(uuid())
+  title   String
+  pages   Int
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String
 
   @@map("books")
 }

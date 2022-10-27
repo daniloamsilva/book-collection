@@ -6,15 +6,16 @@ import { IBooksRepository } from '../interfaces/books-repository.interface';
 export class BooksRepository implements IBooksRepository {
   books: BookEntity[] = [];
 
-  async create(data: CreateBookDto): Promise<BookEntity> {
+  async create(user_id: string, data: CreateBookDto): Promise<BookEntity> {
     const book = new BookEntity();
-    Object.assign(book, data);
+    Object.assign(book, { user_id, ...data });
     this.books.push(book);
     return book;
   }
 
-  async findAll(): Promise<BookEntity[]> {
-    return this.books;
+  async findAll(user_id: string): Promise<BookEntity[]> {
+    const books = this.books.filter((b) => b.user_id === user_id);
+    return books;
   }
 
   async findOne(id: string): Promise<BookEntity> {
@@ -33,6 +34,7 @@ export class BooksRepository implements IBooksRepository {
       id: book.id,
       title,
       pages,
+      user_id: 'user_id',
     };
 
     return this.books[findIndex];

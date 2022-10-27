@@ -5,6 +5,7 @@ export class BookEntity implements Book {
   id: string;
   title: string;
   pages: number;
+  user_id: string;
 
   constructor() {
     if (!this.id) {

@@ -10,6 +10,8 @@ import {
 } from '@nestjs/common/decorators';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import { User } from '../decorators/user.decorator';
+import { UserEntity } from '../users/entities/user.entity';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
@@ -23,31 +25,35 @@ export class BooksController {
 
   @ApiOperation({ summary: 'Criar um livro' })
   @Post()
-  create(@Body() createBookDto: CreateBookDto) {
-    return this.booksService.create(createBookDto);
+  create(@User() user: UserEntity, @Body() createBookDto: CreateBookDto) {
+    return this.booksService.create(user.id, createBookDto);
   }
 
   @ApiOperation({ summary: 'Listar todos os livros' })
   @Get()
-  findAll() {
-    return this.booksService.findAll();
+  findAll(@User() user: UserEntity) {
+    return this.booksService.findAll(user.id);
   }
 
   @ApiOperation({ summary: 'Encontrar um livro' })
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.booksService.findOne(id);
+  findOne(@User() user: UserEntity, @Param('id') id: string) {
+    return this.booksService.findOne(user.id, id);
   }
 
   @ApiOperation({ summary: 'Editar um livro' })
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
-    return this.booksService.update(id, updateBookDto);
+  update(
+    @User() user: UserEntity,
+    @Param('id') id: string,
+    @Body() updateBookDto: UpdateBookDto,
+  ) {
+    return this.booksService.update(user.id, id, updateBookDto);
   }
 
   @ApiOperation({ summary: 'Remover um livro' })
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.booksService.delete(id);
+  remove(@User() user: UserEntity, @Param('id') id: string) {
+    return this.booksService.delete(user.id, id);
   }
 }
