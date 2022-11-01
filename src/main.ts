@@ -14,8 +14,8 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
-    .setTitle('Library Example API')
-    .setDescription('Library Example API description')
+    .setTitle('Book Collection Example API')
+    .setDescription('Book Collection Example API')
     .setVersion('1.0')
     .addTag('Authentication')
     .addTag('Books')
