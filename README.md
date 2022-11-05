@@ -1,73 +1,76 @@
+<h1 align="center">Book Collection API</h1>
+<p align="center">Uma API desenvolvida em NodeJS para colocar em prática conhecimentos adquiridos.</p>
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+  <img src="https://img.shields.io/badge/8.0.0-NestJS-red" alt="NestJS Version" />
+  <img src="https://img.shields.io/badge/4.3.5-Typescript-blue" alt="Typescript Version" />
+  <img src="https://img.shields.io/badge/15.0-Postgres-informational" alt="Postgres Version" />
+  <img src="https://img.shields.io/badge/4.4.0-Prisma-blueviolet" alt="Prisma Version" />
+  <img src="https://img.shields.io/badge/28.0.3-Jest-success" alt="Jest Version" />
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Descrição
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Depois de um curso na Rocketseat de NodeJS e outro na Udemy de NestJS, decidi colocar em prática meus conhecimentos nesse pequeno projeto. O usuário pode se registrar, fazer login e gerenciar sua coleção de livros. A API foi feita com esses conceitos em mente:
 
-## Description
+- 🔒 Autenticação
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+A autenticação é uma parte **essencial** da maioria dos aplicativos. O JSON Web Token ( JWT ) foi a estratégia utilizada nesse projeto.
 
-## Installation
+- 📚 CRUD dos Livros
 
-```bash
-$ npm install
+CRUD são as quatro operações básicas (criação, consulta, atualização e destruição de dados) utilizadas em bases de dados relacionais. Sua coleção é gerenciada através dessas operações.
+
+- 🎲 Postgres e Prisma
+
+Utilizei o Postgres como banco de dados e o Prisma para facilitar as consultas, criação de tabelas, relacionamentos e migrations.
+
+- 🧪 Testes automátizados
+
+O ponto que eu estava mais ansioso para estudar. Consegui fazer uma cobertura de 100% da aplicação com testes unitários e e2e garantindo assim seu funcionamento e qualidade.
+
+- 📃 Documentação
+
+E por fim utilizei o Swagger para a documentação do projeto. O Nest oferece um módulo bem completo para documentar cada rota direto no código através dos decorators.
+
+## Rodando o projeto
+- Primeiro crie um arquivo **.env** na raiz do projeto utilizando o **.env.example** como base.
+- Instale as dependências
+```powershell
+yarn
+```
+- Se estiver usando o docker, crie um container para o Postgres
+```powershell
+docker run --name postgres -e POSTGRES_PASSWORD=docker -p 5432:5432 -d postgres
+```
+- Dispare as migrations para criar o banco de dados
+```powershell
+yarn prisma migrate dev
+```
+- Inicie a aplicação
+```powershell
+yarn start:dev
+```
+- Para visualizar a documentação acesse a seguinte URL:
+```
+http://localhost:3000/api
 ```
 
-## Running the app
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+## Testando
+- Todos os testes
+```powershell
+yarn test
 ```
-
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+- Testes unitários
+```powershell
+yarn test:unit
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+- Testes e2e
+```powershell
+yarn test:e2e
+```
+- Testes com cobertura
+```powershell
+yarn test:cov
+```
+## Insomnia
+Na raiz do projeto deixei o arquivo **insomnia-collection.json** que pode ser importado no **Insomnia** com as rotas e variáveis de ambiente configuradas.
