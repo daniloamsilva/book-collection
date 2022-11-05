@@ -1,5 +1,5 @@
 <h1 align="center">Book Collection API</h1>
-<p align="center">Uma API desenvolvida em NodeJS para colocar em prática conhecimentos adquiridos.</p>
+<p align="center">Uma API desenvolvida em NestJS com Typescript para colocar em prática conhecimentos adquiridos.</p>
 <p align="center">
   <img src="https://img.shields.io/badge/8.0.0-NestJS-red" alt="NestJS Version" />
   <img src="https://img.shields.io/badge/4.3.5-Typescript-blue" alt="Typescript Version" />
