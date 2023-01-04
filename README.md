@@ -24,7 +24,7 @@ CRUD são as quatro operações básicas (criação, consulta, atualização e d
 
 Utilizei o Postgres como banco de dados e o Prisma para facilitar as consultas, criação de tabelas, relacionamentos e migrations.
 
-- 🧪 Testes automátizados
+- 🧪 Testes automatizados
 
 O ponto que eu estava mais ansioso para estudar. Consegui fazer uma cobertura de 100% da aplicação com testes unitários e e2e garantindo assim seu funcionamento e qualidade.
 
