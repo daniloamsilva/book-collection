@@ -3,6 +3,7 @@ import { BooksService } from './books.service';
 import { BooksController } from './books.controller';
 import { PrismaService } from '../prisma/prisma.service';
 import { BooksRepository } from './repositories/implementations/books.repository';
+import { IBooksRepository } from './repositories/interfaces/books-repository.interface';
 
 @Module({
   controllers: [BooksController],
@@ -10,7 +11,7 @@ import { BooksRepository } from './repositories/implementations/books.repository
     BooksService,
     PrismaService,
     {
-      provide: 'IBooksRepository',
+      provide: IBooksRepository,
       useClass: BooksRepository,
     },
   ],

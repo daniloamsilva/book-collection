@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { errors } from './books.error';
 import { BooksService } from './books.service';
 import { BooksRepository } from './repositories/in-memory/books.repository';
+import { IBooksRepository } from './repositories/interfaces/books-repository.interface';
 
 describe('BooksService', () => {
   let booksService: BooksService;
@@ -12,7 +13,7 @@ describe('BooksService', () => {
       providers: [
         BooksService,
         {
-          provide: 'IBooksRepository',
+          provide: IBooksRepository,
           useClass: BooksRepository,
         },
       ],

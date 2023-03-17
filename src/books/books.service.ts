@@ -12,7 +12,7 @@ import { IBooksRepository } from './repositories/interfaces/books-repository.int
 @Injectable()
 export class BooksService {
   constructor(
-    @Inject('IBooksRepository') private booksRepository: IBooksRepository,
+    @Inject(IBooksRepository) private booksRepository: IBooksRepository,
   ) {}
 
   async create(user_id: string, { title, pages }: CreateBookDto) {

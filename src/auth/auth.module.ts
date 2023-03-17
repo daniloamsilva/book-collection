@@ -8,6 +8,7 @@ import { JwtStrategy } from './jwt.strategy';
 import { AuthController } from './auth.controller';
 import { UsersRepository } from '../users/repositories/implementations/users.repository';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { IUsersRepository } from '../users/repositories/interfaces/users-repository.interface';
 
 @Module({
   controllers: [AuthController],
@@ -25,7 +26,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
     PrismaService,
     JwtStrategy,
     {
-      provide: 'IUsersRepository',
+      provide: IUsersRepository,
       useClass: UsersRepository,
     },
   ],

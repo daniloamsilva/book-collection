@@ -13,7 +13,7 @@ export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-    @Inject('IUsersRepository') private usersRepository: IUsersRepository,
+    @Inject(IUsersRepository) private usersRepository: IUsersRepository,
   ) {}
 
   async validateUser(username: string, pass: string): Promise<any> {

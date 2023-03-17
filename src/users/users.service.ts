@@ -6,7 +6,7 @@ export type User = any;
 @Injectable()
 export class UsersService {
   constructor(
-    @Inject('IUsersRepository') private usersRepository: IUsersRepository,
+    @Inject(IUsersRepository) private usersRepository: IUsersRepository,
   ) {}
 
   async findOne(username: string): Promise<User | undefined> {

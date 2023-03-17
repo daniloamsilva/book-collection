@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UsersRepository } from './repositories/implementations/users.repository';
+import { IUsersRepository } from './repositories/interfaces/users-repository.interface';
 import { UsersService } from './users.service';
 
 @Module({
@@ -9,7 +10,7 @@ import { UsersService } from './users.service';
     UsersService,
     PrismaService,
     {
-      provide: 'IUsersRepository',
+      provide: IUsersRepository,
       useClass: UsersRepository,
     },
   ],

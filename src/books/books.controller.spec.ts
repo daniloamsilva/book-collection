@@ -13,6 +13,8 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthService } from '../auth/auth.service';
 import { LocalStrategy } from '../auth/local.strategy';
 import { UsersRepository } from '../users/repositories/implementations/users.repository';
+import { IBooksRepository } from './repositories/interfaces/books-repository.interface';
+import { IUsersRepository } from '../users/repositories/interfaces/users-repository.interface';
 
 describe('BooksController', () => {
   let app: INestApplication;
@@ -36,7 +38,7 @@ describe('BooksController', () => {
         PrismaService,
         JwtStrategy,
         {
-          provide: 'IUsersRepository',
+          provide: IUsersRepository,
           useClass: UsersRepository,
         },
       ],
@@ -76,7 +78,7 @@ describe('BooksController', () => {
         PrismaService,
         JwtStrategy,
         {
-          provide: 'IBooksRepository',
+          provide: IBooksRepository,
           useClass: BooksRepository,
         },
       ],

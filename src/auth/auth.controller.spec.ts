@@ -12,6 +12,7 @@ import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { LocalStrategy } from './local.strategy';
 import { AuthController } from './auth.controller';
+import { IUsersRepository } from '../users/repositories/interfaces/users-repository.interface';
 
 describe('AuthController', () => {
   let app: INestApplication;
@@ -33,7 +34,7 @@ describe('AuthController', () => {
         PrismaService,
         JwtStrategy,
         {
-          provide: 'IUsersRepository',
+          provide: IUsersRepository,
           useClass: UsersRepository,
         },
       ],

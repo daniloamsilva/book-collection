@@ -10,6 +10,7 @@ import { ForbiddenException } from '@nestjs/common/exceptions';
 import { errors } from './auth.error';
 import { Module } from '@nestjs/common/decorators';
 import { UsersService } from '../users/users.service';
+import { IUsersRepository } from '../users/repositories/interfaces/users-repository.interface';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -20,7 +21,7 @@ describe('AuthService', () => {
       providers: [
         UsersService,
         {
-          provide: 'IUsersRepository',
+          provide: IUsersRepository,
           useClass: UsersRepository,
         },
       ],
@@ -41,7 +42,7 @@ describe('AuthService', () => {
         LocalStrategy,
         JwtStrategy,
         {
-          provide: 'IUsersRepository',
+          provide: IUsersRepository,
           useClass: UsersRepository,
         },
       ],
