@@ -22,6 +22,7 @@
     "test:unit": "jest --testPathPattern=.*\\.service\\.spec\\.ts$"
   },
   "dependencies": {
+    "@fastify/static": "^6.9.0",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^8.0.0",
@@ -29,6 +30,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/passport": "^9.0.0",
     "@nestjs/platform-express": "^8.0.0",
+    "@nestjs/platform-fastify": "^9.3.10",
     "@nestjs/swagger": "^6.1.2",
     "@prisma/client": "^4.4.0",
     "bcrypt": "^5.1.0",
